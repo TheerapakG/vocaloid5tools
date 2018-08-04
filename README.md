@@ -1,5 +1,5 @@
 # repackagevpr
-script to add the VOCALOID5 json file used internally into new .vpr file with appropriate information required by the VOCALOID5 program
+script to add the VOCALOID5 json file readable by the VOCALOID5 program into new .vpr file with appropriate information required by the VOCALOID5 program
 
 to run, simply install python 3
 
