@@ -1,3 +1,6 @@
+# vocaloid5tools
+this repository is collection of scripts that can be use to read, extract, repackage and interact in the other way with VOCALOID5 .vpr file
+
 # repackagevpr
 script to add the VOCALOID5 json file readable by the VOCALOID5 program into new .vpr file with appropriate information required by the VOCALOID5 program
 
