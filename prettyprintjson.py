@@ -1,5 +1,3 @@
-#pitch bending is NOT supported
-
 import io
 import sys
 import json
