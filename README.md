@@ -15,4 +15,6 @@ to run, install python 3 and following modules using pip:
 
 midiutil
 
+command: pip install midiutil
+
 this script is written in python 3.6.4, I absolutely sure that it won't work with python 2 and it might not work with earlier version of python 3
