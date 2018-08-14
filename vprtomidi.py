@@ -62,8 +62,52 @@ ZIP.close()
 
 print("[INFO] finished export")
 
+
+“””
+def pitchcurve(vm, part)
+{
+    if(vm == null) return null
+    if(vm.Sequence == null || part == null) return null
+    sequence = vm.Sequence
+    numrenderedscore = part.numrenderedscore
+    if(numrenderedscore == 0) return null
+    #VSMAbsTick _abs1;
+    #VSMAbsTick _abs2;
+    _abs1.Tick = 0
+    _abs2.Tick = part.AbsPosition.Tick
+    baseMsec = sequence.GetMillisecFromTick(_abs1, _abs2) - sequence.PresendTime
+    endMsec = sequence.GetMillisecFromTick(_abs1, part.AbsEnd)
+    num1 = 0
+    sampleFromMillisec = sequence.GetSampleFromMillisec(endMsec - baseMsec, sequence.GetSamplingRate())
+    if(sampleFromMillisec <= 0 || sequence.NumSampleInFrame <= 0):
+        num2 = 0
+    else:
+        num2 = sampleFromMillisec / sequence.NumSampleInFrame
+    minValue = #float.MinValue
+    num3 = 1
+    num4 = 2
+    num5 = minValue
+    index = num1
+    point1x = 0
+    point1y = 0
+    while (index <= num2 && numRenderedScore > index):
+        renderedScore = part.GetRenderedScore(index)
+        if (renderedScore != null):
+            num6 = 0
+            if (num4 == 0):
+                num6 = renderedScore.ExpPit
+            elif (num4 == 1):
+                num6 = renderedScore.PbPit
+            elif (num4 == 2):
+                num6 = renderedScore.VibPit
+        if (num6 != minValue):
+            num7 = (int) ((num6 + 6900)/100 - MainViewModel.MinkeyNumber)
+}
+“””
+
 “””
 VOCALOID pitch curve calculation:
+seems to require engine’s wave render
 
 private void InsertPitchCurve(MusicalEditorViewModel vm, WIVSMMidiPart midiPart)
     {
