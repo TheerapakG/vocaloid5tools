@@ -63,7 +63,7 @@ ZIP.close()
 print("[INFO] finished export")
 
 
-“””
+"""
 def pitchcurve(vm, part):
     if(vm == null) return null
     if(vm.Sequence == null or part == null) return null
@@ -101,9 +101,9 @@ def pitchcurve(vm, part):
                 num6 = renderedScore.VibPit
         if (num6 != minValue):
             num7 = (int) ((num6 + 6900)/100 - MainViewModel.MinkeyNumber)
-“””
+"""
 
-“””
+"""
 VOCALOID pitch curve calculation:
 seems to require engine’s wave render
 
@@ -245,4 +245,4 @@ private void InsertPitchCurve(MusicalEditorViewModel vm, WIVSMMidiPart midiPart)
       Canvas.SetBottom((UIElement) uiPitchCurve1, 1.0);
       this.xCanvasPitchCurve.AddElement((UIControl) uiPitchCurve1);
     }
-“””
+"""
