@@ -64,14 +64,265 @@ print("[INFO] finished export")
 
 
 """
+to implement:
+MusicalEditorViewModel
+VSMAbsTick
+Point
+IntPtr
+"""
+
+"""
+class ArgumentException(ValueError):
+    pass
+
+class ArgumentNullException(ArgumentException):
+    pass
+
+class ArgumentTypeException(TypeError):
+    pass
+
+def IntPtr(obj):
+    return obj._cppObjPtr
+
+class WIVSMPart(IntPtr):
+    #IntPtr _cppObjPtr = IntPtr.Zero
+
+    #[DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
+    #private static extern VSMResult VIS_VSM_WIVSMPart_lastError(IntPtr cppobjptr);
+
+    #[DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
+    #private static extern IntPtr VIS_VSM_WIVSMPart_sequence(IntPtr cppobjptr);
+
+    #[DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
+    #private static extern IntPtr VIS_VSM_WIVSMPart_parent(IntPtr cppobjptr);
+
+    #[DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
+    #private static extern VSMPartType VIS_VSM_WIVSMPart_type(IntPtr cppobjptr);
+
+    #[DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
+    #private static extern IntPtr VIS_VSM_WIVSMPart_name(IntPtr cppobjptr);
+
+    #[DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
+    #[return: MarshalAs(UnmanagedType.U1)]
+    #private static extern bool VIS_VSM_WIVSMPart_setName(IntPtr cppobjptr, [MarshalAs(UnmanagedType.LPWStr), In] string name);
+
+    #[DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
+    #[return: MarshalAs(UnmanagedType.U1)]
+    #private static extern bool VIS_VSM_WIVSMPart_isSelected(IntPtr cppobjptr);
+
+    #[DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
+    #private static extern void VIS_VSM_WIVSMPart_select(IntPtr cppobjptr, [MarshalAs(UnmanagedType.U1)] bool select);
+
+    #[DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
+    #private static extern int VIS_VSM_WIVSMPart_posTick(IntPtr cppobjptr);
+
+    def Equals(self, obj):
+        if (obj == null):
+            return false
+        try:
+            wivsmPart = type(self)(obj)
+        except (TypeError, ValueError) as e:
+            return false
+        return self._cppObjPtr == wivsmPart._cppObjPtr
+
+    def GetHashCode(self):
+        return int(self._cppObjPtr)
+
+    def __init__(self, part):
+        if (isinstance(part, IntPtr)):
+            if (pPart == IntPtr.Zero):
+                raise ArgumentException("アンマネージオブジェクトではない")
+            self._cppObjPtr = pPart
+        elif (isinstance(part, WIVSMPart)):
+            if (part == null):
+                raise ArgumentNullException("オブジェクトがnull")
+            self._cppObjPtr = part._cppObjPtr
+        else:
+            raise ArgumentTypeException("Wrong type given to the constructor")
+
+    public VSMResult LastError
+    {
+      get
+      {
+        return WIVSMPart.VIS_VSM_WIVSMPart_lastError(this._cppObjPtr);
+      }
+    }
+
+    public WIVSMSequence Sequence
+    {
+      get
+      {
+        IntPtr pSequence = WIVSMPart.VIS_VSM_WIVSMPart_sequence(this._cppObjPtr);
+        if (!(pSequence == IntPtr.Zero))
+          return new WIVSMSequence(pSequence, false);
+        return (WIVSMSequence) null;
+      }
+    }
+
+    public WIVSMTrack Parent
+    {
+      get
+      {
+        IntPtr pTrack = WIVSMPart.VIS_VSM_WIVSMPart_parent(this._cppObjPtr);
+        if (!(pTrack == IntPtr.Zero))
+          return new WIVSMTrack(pTrack);
+        return (WIVSMTrack) null;
+      }
+    }
+
+    public VSMPartType Type
+    {
+      get
+      {
+        return WIVSMPart.VIS_VSM_WIVSMPart_type(this._cppObjPtr);
+      }
+    }
+
+    public string Name
+    {
+      get
+      {
+        return Marshal.PtrToStringUni(WIVSMPart.VIS_VSM_WIVSMPart_name(this._cppObjPtr));
+      }
+    }
+
+    public bool IsSelected
+    {
+      get
+      {
+        return WIVSMPart.VIS_VSM_WIVSMPart_isSelected(this._cppObjPtr);
+      }
+      set
+      {
+        WIVSMPart.VIS_VSM_WIVSMPart_select(this._cppObjPtr, value);
+      }
+    }
+
+    public VSMAbsTick AbsPosition
+    {
+      get
+      {
+        return new VSMAbsTick(WIVSMPart.VIS_VSM_WIVSMPart_posTick(this._cppObjPtr));
+      }
+    }
+
+    public bool SetName(string name)
+    {
+      return WIVSMPart.VIS_VSM_WIVSMPart_setName(this._cppObjPtr, name);
+    }
+
+    public VSMAbsTick AbsBegin
+    {
+      get
+      {
+        if (this.Type == VSMPartType.Midi)
+          return new WIVSMMidiPart(this).AbsPosition;
+        WIVSMAudioPart wivsmAudioPart = new WIVSMAudioPart(this);
+        return new VSMAbsTick(wivsmAudioPart.AbsPosition.Tick + wivsmAudioPart.Region.TickBegin);
+      }
+    }
+
+    public virtual VSMAbsTick AbsEnd
+    {
+      get
+      {
+        if (this.Type != VSMPartType.Midi)
+          return new WIVSMAudioPart(this).AbsEnd;
+        return new WIVSMMidiPart(this).AbsEnd;
+      }
+    }
+
+    public int DurationTick
+    {
+      get
+      {
+        int num;
+        if (this.Type == VSMPartType.Midi)
+        {
+          num = new WIVSMMidiPart(this).Duration.Tick;
+        }
+        else
+        {
+          WIVSMAudioPart wivsmAudioPart = new WIVSMAudioPart(this);
+          num = wivsmAudioPart.Region.TickEnd - wivsmAudioPart.Region.TickBegin;
+        }
+        return num;
+      }
+    }
+
+    public WIVSMEffectManager EffectManager
+    {
+      get
+      {
+        if (this.Type == VSMPartType.Midi)
+          return new WIVSMMidiPart(this)?.EffectManager;
+        if (this.Type != VSMPartType.Audio)
+          return (WIVSMEffectManager) null;
+        return new WIVSMAudioPart(this)?.EffectManager;
+      }
+    }
+
+    public double GetBeginTime(double presendTime)
+    {
+      return this.Parent.Parent.GetMillisecFromTick(new VSMAbsTick(0), this.AbsPosition) / 1000.0 - presendTime;
+    }
+
+    public double GetDurationTime(double presendTime)
+    {
+      return this.Parent.Parent.GetMillisecFromTick(this.AbsPosition, this.AbsEnd) / 1000.0 - presendTime;
+    }
+
+    public string PartFilePath
+    {
+      get
+      {
+        string str = (string) null;
+        if (this.Type == VSMPartType.Midi)
+        {
+          WIVSMMidiPart wivsmMidiPart = this as WIVSMMidiPart;
+          if (wivsmMidiPart != null)
+            str = wivsmMidiPart.GetRenderedFilePath();
+        }
+        else if (this.Type == VSMPartType.Audio)
+        {
+          WIVSMAudioPart wivsmAudioPart = this as WIVSMAudioPart;
+          if (wivsmAudioPart != null)
+            str = wivsmAudioPart.GetWaveFilePath();
+        }
+        return str;
+      }
+    }
+
+    public string Description
+    {
+      get
+      {
+        return "" + string.Format("_cppObjPtr: {0:x}\n", (object) this._cppObjPtr.ToInt64()) + string.Format("Sequence: {0:x}\n", (object) this.Sequence.GetHashCode()) + string.Format("Type: {0}\n", (object) this.Type) + string.Format("Name: {0}\n", (object) this.Name) + string.Format("AbsPosition.Tick: {0}\n", (object) this.AbsPosition.Tick) + string.Format("DurationTick: {0}\n", (object) this.DurationTick) + string.Format("PartFilePath: {0}\n", (object) this.PartFilePath);
+      }
+    }
+    
+"""
+
+"""
 def pitchcurve(vm, part):
-    if(vm == null) return null
-    if(vm.Sequence == null or part == null) return null
-    sequence = vm.Sequence
-    numrenderedscore = part.numrenderedscore
-    if(numrenderedscore == 0) return null
     #VSMAbsTick _abs1;
     #VSMAbsTick _abs2;
+    #Point _pt
+    #FastCanvas xCanvasPitchCurve
+    if (vm == null):
+        return null
+    if (vm.Sequence == null or part == null):
+        return null
+    sequence = vm.Sequence
+    numrenderedscore = part.numrenderedscore
+    if (numrenderedscore == 0):
+        return null
+    #UIPitchCurve uiPitchCurve1 = new UIPitchCurve()
+    #{
+    #    VM = vm,
+    #    Part = midiPart,
+    #    PitchCurvePen = this._penPitchCurve
+    #}
     _abs1.Tick = 0
     _abs2.Tick = part.AbsPosition.Tick
     baseMsec = sequence.GetMillisecFromTick(_abs1, _abs2) - sequence.PresendTime
@@ -87,8 +338,7 @@ def pitchcurve(vm, part):
     num4 = 2
     num5 = minValue
     index = num1
-    point1x = 0
-    point1y = 0
+    #Point point1
     while (index <= num2 and numRenderedScore > index):
         renderedScore = part.GetRenderedScore(index)
         if (renderedScore != null):
@@ -100,149 +350,82 @@ def pitchcurve(vm, part):
             elif (num4 == 2):
                 num6 = renderedScore.VibPit
         if (num6 != minValue):
-            num7 = (int) ((num6 + 6900)/100 - MainViewModel.MinkeyNumber)
-"""
-
-"""
-VOCALOID pitch curve calculation:
-seems to require engine’s wave render
-
-private void InsertPitchCurve(MusicalEditorViewModel vm, WIVSMMidiPart midiPart)
-    {
-      if (vm?.Sequence == null || midiPart == null)
-        return;
-      WIVSMSequence sequence = vm.Sequence;
-      ulong numRenderedScore = midiPart.NumRenderedScore;
-      if (numRenderedScore == 0UL)
-        return;
-      UIPitchCurve uiPitchCurve1 = new UIPitchCurve()
-      {
-        VM = vm,
-        Part = midiPart,
-        PitchCurvePen = this._penPitchCurve
-      };
-      this._abs1.Tick = 0;
-      this._abs2.Tick = midiPart.AbsPosition.Tick;
-      double baseMsec = sequence.GetMillisecFromTick(this._abs1, this._abs2) - (double) sequence.PresendTime;
-      double endMsec = sequence.GetMillisecFromTick(this._abs1, midiPart.AbsEnd);
-      long num1 = 0;
-      ulong num2 = ((Func<ulong>) (() =>
-      {
-        long sampleFromMillisec = sequence.GetSampleFromMillisec(endMsec - baseMsec, sequence.GetSamplingRate());
-        if (sampleFromMillisec <= 0L || sequence.NumSampleInFrame <= 0L)
-          return 0;
-        return (ulong) (sampleFromMillisec / sequence.NumSampleInFrame);
-      }))();
-      float minValue = float.MinValue;
-      ulong num3 = 1;
-      int num4 = 2;
-      float num5 = minValue;
-      ulong index = (ulong) num1;
-      Point point1;
-      while (index <= num2 && numRenderedScore > index)
-      {
-        VSMRenderedScoreData renderedScore = midiPart.GetRenderedScore(index);
-        if (renderedScore != null)
-        {
-          float num6 = 0.0f;
-          switch (num4)
-          {
-            case 0:
-              num6 = renderedScore.ExpPit;
-              break;
-            case 1:
-              num6 = renderedScore.PbPit;
-              break;
-            case 2:
-              num6 = renderedScore.VibPit;
-              break;
-          }
-          if ((double) num6 != (double) minValue)
-          {
-            int num7 = (int) (((double) num6 + 6900.0) / 100.0) - MainViewModel.MinKeyNumber;
-            float num8 = (float) ((double) (MainViewModel.MaxKeyCount - 1 - num7) * vm.OneKeyHeight + vm.OneKeyHeight / 2.0) - (float) (((double) num6 + 6900.0 - (double) (num7 * 100)) * (vm.OneKeyHeight / 100.0));
-            double msecEnd = baseMsec + sequence.GetMillisecFromSample((long) index * sequence.NumSampleInFrame, sequence.GetSamplingRate());
-            this._abs1.Tick = 0;
-            this._pt.X = (double) sequence.GetTickFromMillisec(this._abs1, msecEnd) * vm.WidthPerTick;
-            this._pt.Y = (double) num8;
-            if ((double) num5 == (double) minValue && uiPitchCurve1.Points.Count != 0)
-            {
-              UIPitchCurve uiPitchCurve2 = uiPitchCurve1;
-              point1 = uiPitchCurve1.Points[0];
-              double x1 = point1.X;
-              Canvas.SetLeft((UIElement) uiPitchCurve2, x1);
-              Canvas.SetTop((UIElement) uiPitchCurve1, 0.0);
-              UIPitchCurve uiPitchCurve3 = uiPitchCurve1;
-              point1 = uiPitchCurve1.Points[0];
-              double x2 = point1.X;
-              point1 = uiPitchCurve1.Points[uiPitchCurve1.Points.Count - 1];
-              double x3 = point1.X;
-              point1 = uiPitchCurve1.Points[0];
-              double x4 = point1.X;
-              double num9 = x3 - x4;
-              double length = x2 + num9;
-              Canvas.SetRight((UIElement) uiPitchCurve3, length);
-              Canvas.SetBottom((UIElement) uiPitchCurve1, 1.0);
-              this.xCanvasPitchCurve.AddElement((UIControl) uiPitchCurve1);
-              uiPitchCurve1 = new UIPitchCurve()
-              {
-                VM = vm,
-                Part = midiPart,
-                PitchCurvePen = this._penPitchCurve
-              };
-            }
-            uiPitchCurve1.Points.Add(this._pt);
-          }
-          num5 = num6;
-          if (1000 <= uiPitchCurve1.Points.Count)
-          {
-            Point point2 = uiPitchCurve1.Points[uiPitchCurve1.Points.Count - 1];
-            UIPitchCurve uiPitchCurve2 = uiPitchCurve1;
-            point1 = uiPitchCurve1.Points[0];
-            double x1 = point1.X;
-            Canvas.SetLeft((UIElement) uiPitchCurve2, x1);
-            Canvas.SetTop((UIElement) uiPitchCurve1, 0.0);
-            UIPitchCurve uiPitchCurve3 = uiPitchCurve1;
-            point1 = uiPitchCurve1.Points[0];
-            double x2 = point1.X;
-            point1 = uiPitchCurve1.Points[uiPitchCurve1.Points.Count - 1];
-            double x3 = point1.X;
-            point1 = uiPitchCurve1.Points[0];
-            double x4 = point1.X;
-            double num7 = x3 - x4;
-            double length = x2 + num7;
-            Canvas.SetRight((UIElement) uiPitchCurve3, length);
-            Canvas.SetBottom((UIElement) uiPitchCurve1, 1.0);
-            this.xCanvasPitchCurve.AddElement((UIControl) uiPitchCurve1);
-            uiPitchCurve1 = new UIPitchCurve()
-            {
-              VM = vm,
-              Part = midiPart,
-              PitchCurvePen = this._penPitchCurve
-            };
-            uiPitchCurve1.Points.Add(point2);
-          }
-        }
-        index += num3;
-      }
-      if (uiPitchCurve1.Points.Count == 0)
-        return;
-      UIPitchCurve uiPitchCurve4 = uiPitchCurve1;
-      point1 = uiPitchCurve1.Points[0];
-      double x5 = point1.X;
-      Canvas.SetLeft((UIElement) uiPitchCurve4, x5);
-      Canvas.SetTop((UIElement) uiPitchCurve1, 0.0);
-      UIPitchCurve uiPitchCurve5 = uiPitchCurve1;
-      point1 = uiPitchCurve1.Points[0];
-      double x6 = point1.X;
-      point1 = uiPitchCurve1.Points[uiPitchCurve1.Points.Count - 1];
-      double x7 = point1.X;
-      point1 = uiPitchCurve1.Points[0];
-      double x8 = point1.X;
-      double num10 = x7 - x8;
-      double length1 = x6 + num10;
-      Canvas.SetRight((UIElement) uiPitchCurve5, length1);
-      Canvas.SetBottom((UIElement) uiPitchCurve1, 1.0);
-      this.xCanvasPitchCurve.AddElement((UIControl) uiPitchCurve1);
-    }
+            num7 = int((num6 + 6900) / 100 - MainViewModel.MinkeyNumber)
+            num8 = float((MainViewModel.MaxKeyCount - 1 - num7) * vm.OneKeyHeight + vm.OneKeyHeight / 2.0) - ((num6 + 6900.0 - (num7 * 100)) * (vm.OneKeyHeight / 100.0))
+            msecEnd = baseMsec + sequence.GetMillisecFromSample(index * sequence.NumSampleInFrame, sequence.GetSamplingRate())
+            _abs1.Tick = 0
+            _pt.X = sequence.GetTickFromMillisec(_abs1, msecEnd) * vm.WidthPerTick
+            _pt.Y = num8
+            if (num5 == minValue and uiPitchCurve1.Points.Count != 0):
+                uiPitchCurve2 = uiPitchCurve1
+                point1 = uiPitchCurve1.Points[0]
+                x1 = point1.X
+                ##Canvas.SetLeft((UIElement) uiPitchCurve2, x1)
+                ##Canvas.SetTop((UIElement) uiPitchCurve1, 0.0)
+                uiPitchCurve3 = uiPitchCurve1
+                point1 = uiPitchCurve1.Points[0]
+                x2 = point1.X
+                point1 = uiPitchCurve1.Points[uiPitchCurve1.Points.Count - 1]
+                x3 = point1.X
+                point1 = uiPitchCurve1.Points[0]
+                x4 = point1.X
+                num9 = x3 - x4
+                length = x2 + num9
+                ##Canvas.SetRight((UIElement) uiPitchCurve3, length)
+                ##Canvas.SetBottom((UIElement) uiPitchCurve1, 1.0)
+                ##xCanvasPitchCurve.AddElement((UIControl) uiPitchCurve1)
+                #uiPitchCurve1 = new UIPitchCurve()
+                #{
+                #    VM = vm,
+                #    Part = midiPart,
+                #    PitchCurvePen = this._penPitchCurve
+                #}
+            uiPitchCurve1.Points.Add(_pt)
+        num5 = num6
+            if (1000 <= uiPitchCurve1.Points.Count):
+                point2 = uiPitchCurve1.Points[uiPitchCurve1.Points.Count - 1]
+                uiPitchCurve2 = uiPitchCurve1
+                point1 = uiPitchCurve1.Points[0]
+                x1 = point1.X
+                ##Canvas.SetLeft((UIElement) uiPitchCurve2, x1)
+                ##Canvas.SetTop((UIElement) uiPitchCurve1, 0.0)
+                uiPitchCurve3 = uiPitchCurve1
+                point1 = uiPitchCurve1.Points[0]
+                x2 = point1.X
+                point1 = uiPitchCurve1.Points[uiPitchCurve1.Points.Count - 1]
+                x3 = point1.X
+                point1 = uiPitchCurve1.Points[0]
+                x4 = point1.X
+                num7 = x3 - x4
+                length = x2 + num7
+                ##Canvas.SetRight((UIElement) uiPitchCurve3, length)
+                ##Canvas.SetBottom((UIElement) uiPitchCurve1, 1.0)
+                ##xCanvasPitchCurve.AddElement((UIControl) uiPitchCurve1)
+                #uiPitchCurve1 = new UIPitchCurve()
+                #{
+                #    VM = vm,
+                #    Part = midiPart,
+                #    PitchCurvePen = this._penPitchCurve
+                #}
+                uiPitchCurve1.Points.Add(point2)
+        index += num3
+    if (uiPitchCurve1.Points.Count == 0):
+        return null
+    uiPitchCurve4 = uiPitchCurve1
+    point1 = uiPitchCurve1.Points[0]
+    x5 = point1.X
+    ##Canvas.SetLeft((UIElement) uiPitchCurve4, x5)
+    ##Canvas.SetTop((UIElement) uiPitchCurve1, 0.0)
+    uiPitchCurve5 = uiPitchCurve1
+    point1 = uiPitchCurve1.Points[0]
+    x6 = point1.X
+    point1 = uiPitchCurve1.Points[uiPitchCurve1.Points.Count - 1]
+    x7 = point1.X
+    point1 = uiPitchCurve1.Points[0]
+    x8 = point1.X
+    num10 = x7 - x8
+    length1 = x6 + num10
+    ##Canvas.SetRight((UIElement) uiPitchCurve5, length1)
+    ##Canvas.SetBottom((UIElement) uiPitchCurve1, 1.0)
+    ##xCanvasPitchCurve.AddElement((UIControl) uiPitchCurve1)
 """
