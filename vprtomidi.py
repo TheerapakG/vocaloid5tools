@@ -64,10 +64,9 @@ print("[INFO] finished export")
 
 
 “””
-def pitchcurve(vm, part)
-{
+def pitchcurve(vm, part):
     if(vm == null) return null
-    if(vm.Sequence == null || part == null) return null
+    if(vm.Sequence == null or part == null) return null
     sequence = vm.Sequence
     numrenderedscore = part.numrenderedscore
     if(numrenderedscore == 0) return null
@@ -79,7 +78,7 @@ def pitchcurve(vm, part)
     endMsec = sequence.GetMillisecFromTick(_abs1, part.AbsEnd)
     num1 = 0
     sampleFromMillisec = sequence.GetSampleFromMillisec(endMsec - baseMsec, sequence.GetSamplingRate())
-    if(sampleFromMillisec <= 0 || sequence.NumSampleInFrame <= 0):
+    if(sampleFromMillisec <= 0 or sequence.NumSampleInFrame <= 0):
         num2 = 0
     else:
         num2 = sampleFromMillisec / sequence.NumSampleInFrame
@@ -90,7 +89,7 @@ def pitchcurve(vm, part)
     index = num1
     point1x = 0
     point1y = 0
-    while (index <= num2 && numRenderedScore > index):
+    while (index <= num2 and numRenderedScore > index):
         renderedScore = part.GetRenderedScore(index)
         if (renderedScore != null):
             num6 = 0
@@ -102,7 +101,6 @@ def pitchcurve(vm, part)
                 num6 = renderedScore.VibPit
         if (num6 != minValue):
             num7 = (int) ((num6 + 6900)/100 - MainViewModel.MinkeyNumber)
-}
 “””
 
 “””
