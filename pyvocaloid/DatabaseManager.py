@@ -1,4 +1,7 @@
 #VoiceBank
+#VibratoBank
+#DvqmDB
+#XSynthGroup
 
 import ctypes
 import csharptypes
