@@ -9,9 +9,7 @@ from contextlib import contextmanager
 
 path = "vocaloid editor path: "
 
-def load():
-    global vdm
-    vdm = ctypes.cdll.LoadLibrary(path+"\\vdm.dll")
+def load_vdm():
     global VDM_hasDatabaseManager
     VDM_hasDatabaseManager = vdm[86]
     VDM_hasDatabaseManager.argtypes = [csharptypes.IntPtr]
@@ -73,71 +71,81 @@ def load():
     VDM_DatabaseManager_xsynthGroup.argtypes = [csharptypes.IntPtr, csharptypes.UIntPtr]
     VDM_DatabaseManager_xsynthGroup.restype = csharptypes.IntPtr
 
+def load_vdm_path():
+    global vdm
+    vdm = ctypes.cdll.LoadLibrary(path+"\\vdm.dll")
+    load_vdm()
+
+def load_vdm_dll(vdmdll):
+    global vdm
+    vdm = vdmdll
+    load_vdm()
+
 class DatabaseManager:
     
     _cppObjPtr = csharptypes.IntPtr.Zero
     
-    def VDM_hasDatabaseManager(self, manager):
+    def VDM_hasDatabaseManager(manager):
         global VDM_hasDatabaseManager
         return VDM_hasDatabaseManager(manager)
     
-    def VDM_DatabaseManager_destroy(self, manager):
+    def VDM_DatabaseManager_destroy(manager):
         global VDM_DatabaseManager_destroy
         return VDM_DatabaseManager_destroy(manager)
     
-    def VDM_DatabaseManager_appID(self, manager):
+    def VDM_DatabaseManager_appID(manager):
         global VDM_DatabaseManager_appID
         return VDM_DatabaseManager_appID(manager)
     
-    def VDM_DatabaseManager_numVoiceBanks(self, manager):
+    def VDM_DatabaseManager_numVoiceBanks(manager):
         global VDM_DatabaseManager_numVoiceBanks
         return VDM_DatabaseManager_numVoiceBanks(manager)
     
-    def VDM_DatabaseManager_defaultVoiceBank(self, manager):
+    def VDM_DatabaseManager_defaultVoiceBank(manager):
         global VDM_DatabaseManager_defaultVoiceBank
         return VDM_DatabaseManager_defaultVoiceBank(manager)
     
-    def VDM_DatabaseManager_voiceBankByIndex(self, manager, index):
+    def VDM_DatabaseManager_voiceBankByIndex(manager, index):
         global VDM_DatabaseManager_voiceBankByIndex
         return VDM_DatabaseManager_voiceBankByIndex(manager, index)
     
-    def VDM_DatabaseManager_voiceBankByCompID(self, manager, compID):
+    def VDM_DatabaseManager_voiceBankByCompID(manager, compID):
         global VDM_DatabaseManager_voiceBankByCompID
         return VDM_DatabaseManager_voiceBankByCompID(manager, compID)
     
-    def VDM_DatabaseManager_voiceBankByBSPC(self, manager, bs, pc):
+    def VDM_DatabaseManager_voiceBankByBSPC(manager, bs, pc):
         global VDM_DatabaseManager_voiceBankByBSPC
         return VDM_DatabaseManager_voiceBankByBSPC(manager, bs, pc)
     
-    def VDM_DatabaseManager_numVibratoBanks(self, manager):
+    def VDM_DatabaseManager_numVibratoBanks(manager):
         global VDM_DatabaseManager_numVibratoBanks
         return VDM_DatabaseManager_numVibratoBanks(manager)
     
-    def VDM_DatabaseManager_vibratoBank(self, manager, index):
+    def VDM_DatabaseManager_vibratoBank(manager, index):
         global VDM_DatabaseManager_vibratoBank
         return VDM_DatabaseManager_vibratoBank(manager, index)
     
-    def VDM_DatabaseManager_voiceBankByIndex(self, manager, size_t_index):
+    def VDM_DatabaseManager_voiceBankByIndex(manager, size_t_index):
         global VDM_DatabaseManager_voiceBankByIndex
         return VDM_DatabaseManager_voiceBankByIndex(manager, size_t_index)
     
-    def VDM_DatabaseManager_numDvqmDBs(self, manager):
+    def VDM_DatabaseManager_numDvqmDBs(manager):
         global VDM_DatabaseManager_numDvqmDBs
         return VDM_DatabaseManager_numDvqmDBs(manager)
     
-    def VDM_DatabaseManager_dvqmDBByIndex(self, manager, size_t_index):
+    def VDM_DatabaseManager_dvqmDBByIndex(manager, size_t_index):
         global VDM_DatabaseManager_dvqmDBByIndex
         return VDM_DatabaseManager_dvqmDBByIndex(manager, size_t_index)
     
-    def VDM_DatabaseManager_dvqmDBByID(self, manager, ide):
+    def VDM_DatabaseManager_dvqmDBByID(manager, ide):
         global VDM_DatabaseManager_dvqmDBByID
         return VDM_DatabaseManager_dvqmDBByID(manager, ide)
     
-    def VDM_DatabaseManager_numXSynthGroups(self, manager):
+    def VDM_DatabaseManager_numXSynthGroups(manager):
         global VDM_DatabaseManager_numXSynthGroups
         return VDM_DatabaseManager_numXSynthGroups(manager)
     
-    def VDM_DatabaseManager_xsynthGroup(self, manager, size_t_index):
+    def VDM_DatabaseManager_xsynthGroup(manager, size_t_index):
         global VDM_DatabaseManager_xsynthGroup
         return VDM_DatabaseManager_xsynthGroup(manager, size_t_index)
     
@@ -157,12 +165,12 @@ class DatabaseManager:
         self._cppObjPtr = csharptypes.IntPtr.Zero
     
     def get_AppID(self):
-        return DatabaseManager.VDM_DatabaseManager_appID(self, self._cppObjPtr)
+        return DatabaseManager.VDM_DatabaseManager_appID(self._cppObjPtr)
     
     AppID = property(get_AppID)
     
     def get_NumVoiceBanks(self):
-        num = DatabaseManager.VDM_DatabaseManager_numVoiceBanks(self, self._cppObjPtr)
+        num = DatabaseManager.VDM_DatabaseManager_numVoiceBanks(self._cppObjPtr)
         return num
     
     NumVoiceBanks = property(get_NumVoiceBanks)
@@ -181,19 +189,19 @@ class DatabaseManager:
     """
     
     def get_NumVibratoBanks(self):
-        num = DatabaseManager.VDM_DatabaseManager_numVibratoBanks(self, self._cppObjPtr)
+        num = DatabaseManager.VDM_DatabaseManager_numVibratoBanks(self._cppObjPtr)
         return num
     
     NumVibratoBanks = property(get_NumVibratoBanks)
     
     def get_NumDvqmDBs(self):
-        num = DatabaseManager.VDM_DatabaseManager_numDvqmDBs(self, self._cppObjPtr)
+        num = DatabaseManager.VDM_DatabaseManager_numDvqmDBs(self._cppObjPtr)
         return num
     
     NumDvqmDBs = property(get_NumDvqmDBs)
     
     def get_NumXSynthGroups(self):
-        num = DatabaseManager.VDM_DatabaseManager_numXSynthGroups(self, self._cppObjPtr)
+        num = DatabaseManager.VDM_DatabaseManager_numXSynthGroups(self._cppObjPtr)
         return num
     
     NumXSynthGroups = property(get_NumXSynthGroups)
@@ -201,7 +209,7 @@ class DatabaseManager:
     def HasDatabaseManager(self, manager):
         if (manager == None):
             return false
-        return DatabaseManager.VDM_hasDatabaseManager(self, manager._cppObjPtr)
+        return DatabaseManager.VDM_hasDatabaseManager(manager._cppObjPtr)
     
     """
     public VoiceBank GetVoiceBankByIndex(ulong index)
@@ -327,7 +335,7 @@ class DatabaseManager:
     }
     """
 
-    def GetAvailableCompID(compID, bs):
+    def GetAvailableCompID(self, compID, bs):
         if(compID == None or compID == ""):
             return ""
         temp = self.GetAvailableVoiceBank(compID, bs)
@@ -429,4 +437,4 @@ class DatabaseManager:
     
 if __name__ == '__main__':
     path = input(path)
-    load()
+    load_vdm_path()
