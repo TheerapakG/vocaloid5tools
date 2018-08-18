@@ -1,0 +1,15 @@
+ordinal hint RVA      name
+
+          1    0 000BEBE0 VIS_DSE_CreateManager
+          2    1 000BEC70 VIS_DSE_DestroyManager
+          3    2 000BECC0 VIS_DSE_GetCompIDFromLicense
+          4    3 000BECD0 VIS_DSE_GetCompNameFromLicense
+          5    4 000BECE0 VIS_DSE_GetCompTypeFromLicense
+          6    5 000BECF0 VIS_DSE_GetCompVersionFromLicense
+          7    6 000BED80 VIS_DSE_GetExpiryDateFromLicense
+          8    7 000BEDA0 VIS_DSE_GetLicense
+          9    8 000BEDE0 VIS_DSE_GetResultFromLicense
+         10    9 000BEDF0 VIS_DSE_HasManager
+         11    A 000BEE00 VIS_DSE_InitializeManager
+         12    B 000BEE20 VIS_DSE_NumLicenses
+         13    C 000BEE50 VIS_DSE_TerminateManager

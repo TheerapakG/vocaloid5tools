@@ -206,7 +206,7 @@ class DatabaseManager:
     
     NumXSynthGroups = property(get_NumXSynthGroups)
     
-    def HasDatabaseManager(self, manager):
+    def HasDatabaseManager(manager):
         if (manager == None):
             return false
         return DatabaseManager.VDM_hasDatabaseManager(manager._cppObjPtr)

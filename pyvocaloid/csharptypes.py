@@ -10,3 +10,9 @@ LPWStr = ctypes.c_wchar_p
 
 class ArgumentException(ValueError):
     pass
+
+class ArgumentNullException(ValueError):
+    pass
+
+class ApplicationException(BaseException):
+    pass
