@@ -41,21 +41,24 @@ class DatabaseManagerIF:
         return VDM_hasDatabaseManager(manager)
 
     def CreateDatabaseManager(appID, result_p):
-        expDBDirPath = os.environ["ProgramFiles"] + "\\VOCALOID5\\Explib"
+        expDBDirPath = os.environ["CommonProgramFiles"] + "\\VOCALOID5\\Explib"
         if(expDBDirPath == None):
             return None
         elif(expDBDirPath == ""):
             return None
         try:
-            databaseManager = DatabaseManager(DatabaseManagerIF.VDM_createDatabaseManager(self, appID, expDBDirPath, result_p))
-            return (None if result_p.contents != VDMError.VDMError.NotAny else databaseManager)
+            databaseManager = DatabaseManager.DatabaseManager(DatabaseManagerIF.VDM_createDatabaseManager(appID, expDBDirPath, result_p))
+            if(result_p.contents.value != VDMError.VDMError.NotAny):
+                return None
+            else:
+                return databaseManager
         except:
             return None
 
     def HasDatabaseManager(manager):
         if(manager == None):
             return False
-        return DatabaseManagerIF.VDM_hasDatabaseManager(self, cast(byref(manager), ctypes.c_void_p))
+        return DatabaseManagerIF.VDM_hasDatabaseManager(manager.IntPtr())
 
 if __name__ == '__main__':
     path = input(path)
