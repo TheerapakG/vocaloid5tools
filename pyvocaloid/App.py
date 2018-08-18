@@ -13,7 +13,7 @@ class App:
         result1 = VDMError.NotAny
         result1_p = ctypes.pointer(ctypes.c_int(VDMError.NotAny))
         App.DatabaseManager = DatabaseManagerIF.CreateDatabaseManager("voc5", ref result1)
-        if(App.DatabaseManager == None || result1 != VDMError.None):
+        if(App.DatabaseManager == None or result1 != VDMError.None):
             raise Exception("App.ModuleResult.Fail")
 
         print("Initializing modules (DSE) ...")
