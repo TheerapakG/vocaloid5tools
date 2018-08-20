@@ -20,7 +20,8 @@ def load_vdm():
 
 def load_vdm_path():
     global vdm
-    vdm = ctypes.cdll.LoadLibrary(path+"\\vdm.dll")
+    os.chdir(path)
+    vdm = ctypes.cdll.LoadLibrary("vdm.dll")
     load_vdm()
     DatabaseManager.load_vdm_dll(vdm)
 

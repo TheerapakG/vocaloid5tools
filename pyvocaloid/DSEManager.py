@@ -1,8 +1,10 @@
 import ctypes
 import csharptypes
-from contextlib import contextmanager
 
-import License
+from contextlib import contextmanager
+import os
+
+import DSE_License
 
 path = "vocaloid editor path: "
 
@@ -18,7 +20,8 @@ def load_dse():
 
 def load_dse_path():
     global dse
-    dse = ctypes.cdll.LoadLibrary(path+"\\dse.dll")
+    os.chdir(path)
+    dse = ctypes.cdll.LoadLibrary("dse.dll")
     load_dse()
 
 def load_dse_dll(dsedll):
@@ -61,13 +64,13 @@ class DSEManager:
 
     def GetLicense(self, index):
         _license = DSEManager.VIS_DSE_GetLicense(self._cppObjPtr, ctypes.cast(index, csharptypes.UIntPtr))
-        if(!(_license == IntPtr.Zero)):
+        if(not (_license == csharptypes.IntPtr.Zero)):
             return DSE_License.License(_license)
         return None
 
     def GetLicenses(self):
         licenseList = list()
-        for(index in range(0, self.NumLicenses)):
+        for index in range(0, self.NumLicenses):
             _license = self.GetLicense(index)
             if(_license != None):
                 licenseList.append(_license)
@@ -75,4 +78,4 @@ class DSEManager:
 
 if __name__ == '__main__':
     path = input(path)
-    load_vdm_path()
+    load_dse_path()

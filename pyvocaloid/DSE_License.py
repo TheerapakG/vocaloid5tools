@@ -95,12 +95,12 @@ class License:
         self._dseLicense = csharptypes.IntPtr.Zero
 
     def get_CompID(self):
-        return ctypes.cast(License.VIS_DSE_GetCompIDFromLicense(self._dseLicense), c_char_p).value
+        return ctypes.cast(License.VIS_DSE_GetCompIDFromLicense(self._dseLicense), ctypes.c_wchar_p).value
 
     CompID = property(get_CompID)
 
     def get_CompName(self):
-        return ctypes.cast(License.VIS_DSE_GetCompNameFromLicense(self._dseLicense), c_char_p).value
+        return ctypes.cast(License.VIS_DSE_GetCompNameFromLicense(self._dseLicense), ctypes.c_wchar_p).value
 
     CompName = property(get_CompName)
 

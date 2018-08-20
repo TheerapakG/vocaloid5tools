@@ -6,6 +6,7 @@
 import ctypes
 import csharptypes
 from contextlib import contextmanager
+import os
 
 path = "vocaloid editor path: "
 
@@ -73,7 +74,8 @@ def load_vdm():
 
 def load_vdm_path():
     global vdm
-    vdm = ctypes.cdll.LoadLibrary(path+"\\vdm.dll")
+    os.chdir(path)
+    vdm = ctypes.cdll.LoadLibrary("vdm.dll")
     load_vdm()
 
 def load_vdm_dll(vdmdll):
