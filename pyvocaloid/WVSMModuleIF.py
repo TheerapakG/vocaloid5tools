@@ -4,6 +4,7 @@ import ctypes
 import csharptypes
 
 import VSMError
+import WIVSMSequenceManager
 
 path = "vocaloid editor path: "
 
@@ -34,7 +35,7 @@ def load_vsm_dll(vsmdll):
 
 class WVSMModuleIF:
 
-    _managers = map()
+    _managers = dict()
 
     def VIS_VSM_WVSMModuleIF_createManager(appId):
         global VIS_VSM_WVSMModuleIF_createManager
@@ -53,6 +54,21 @@ class WVSMModuleIF:
             return None
         if(appID == ""):
             return None
+        if(appid in WVSMModuleIF._managers):
+            return WIVSMSequenceManager(WVSMModuleIF._managers[appID], False)
+        manager = WVSMModuleIF.VIS_VSM_WVSMModuleIF_createManager(appID)
+        if (manager == csharptypes.IntPtr.Zero):
+            return None
+        WVSMModuleIF._managers[appID] = manager
+        return WIVSMSequenceManager(manager, True)
+
+    def HasManager(sequenceManager):
+        if (sequenceManager == csharptypes.IntPtr.Zero):
+            return False
+        return WVSMModuleIF.VIS_VSM_WVSMModuleIF_hasManager(sequenceManager)
+
+    def LastError():
+        return WVSMModuleIF.VIS_VSM_WVSMModuleIF_lastError()
     
 
 if(__name__ == "__main__"):
