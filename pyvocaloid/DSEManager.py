@@ -4,6 +4,7 @@ import csharptypes
 from contextlib import contextmanager
 import os
 
+import DSEManagerIF
 import DSE_License
 
 path = "vocaloid editor path: "
@@ -44,6 +45,10 @@ class DSEManager:
     def IntPtr(self):
         return self._cppObjPtr
 
+    def Dispose(self):
+        DSEManagerIF.DSEManagerIF.DestroyManager(self)
+        self._cppObjPtr = csharptypes.IntPtr.Zero
+
     def __init__(self, pDSEManager):
         if(pDSEManager == csharptypes.IntPtr.Zero):
             raise csharptypes.ArgumentException("アンマネージオブジェクトではない")
@@ -53,7 +58,7 @@ class DSEManager:
         return self
     
     def __exit__(self, exc_type, exc_value, traceback):
-        DatabaseManager.VDM_DatabaseManager_destroy(self._cppObjPtr)
+        DSEManagerIF.DSEManagerIF.DestroyManager(self)
         self._cppObjPtr = csharptypes.IntPtr.Zero
 
     def get_NumLicenses(self):

@@ -153,6 +153,10 @@ class DatabaseManager:
     
     def IntPtr(self):
         return self._cppObjPtr
+
+    def Dispose(self):
+        DatabaseManager.VDM_DatabaseManager_destroy(self._cppObjPtr)
+        self._cppObjPtr = csharptypes.IntPtr.Zero
     
     def __init__(self, pDatabaseManager):
         if(pDatabaseManager == csharptypes.IntPtr.Zero):

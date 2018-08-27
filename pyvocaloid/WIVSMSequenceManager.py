@@ -2,6 +2,7 @@ import ctypes
 import csharptypes
 import os
 
+import WVSMModuleIF
 import VSMResult
  
 path = "vocaloid editor path: "
@@ -147,6 +148,25 @@ class WIVSMSequenceManager:
     def GetHashCode(self):
         return self._cppObjPtr
 
+    def Dispose(self, *args):
+        if(len(args) == 0):
+            self.Dispose(True)
+            return
+        if(len(args) == 1):
+            if(disposing):
+                num = 1
+            else:
+                num = 0
+            if(self._isCreateUnmanagedObj):
+                if(self._cppObjPtr != IntPtr.Zero):
+                    if (not WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_destroy(self._cppObjPtr)):
+                        raise csharptypes.ApplicationException("シーケンスマネージャーの破棄に失敗した")
+                    WVSMModuleIF.WVSMModuleIF.RemoveManager(self)
+                    self._cppObjPtr = csharptypes.IntPtr.Zero
+                self._isCreateUnmanagedObj = False
+            else:
+                self._cppObjPtr = csharptypes.IntPtr.Zero
+
     def __init__(self, pSeqMgr, isCreateUnmanagedObj = False):
         if (pSeqMgr == csharptypes.IntPtr.Zero):
             raise csharptypes.ArgumentException("アンマネージオブジェクトではない")
@@ -155,6 +175,7 @@ class WIVSMSequenceManager:
 
     def __enter__(self):
         return self
-
+    
     def __exit__(self, exc_type, exc_value, traceback):
-        pass
+        self.Dispose(False)
+        
