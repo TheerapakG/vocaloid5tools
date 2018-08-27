@@ -146,3 +146,15 @@ class WIVSMSequenceManager:
 
     def GetHashCode(self):
         return self._cppObjPtr
+
+    def __init__(self, pSeqMgr, isCreateUnmanagedObj = False):
+        if (pSeqMgr == csharptypes.IntPtr.Zero):
+            raise csharptypes.ArgumentException("アンマネージオブジェクトではない")
+        self._isCreateUnmanagedObj = isCreateUnmanagedObj
+        self._cppObjPtr = pSeqMgr
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
