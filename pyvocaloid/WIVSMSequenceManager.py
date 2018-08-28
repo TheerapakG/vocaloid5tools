@@ -1,3 +1,6 @@
+#VSMSequenceData
+#WIVSMSequence
+
 import ctypes
 import csharptypes
 import os
@@ -179,3 +182,23 @@ class WIVSMSequenceManager:
     def __exit__(self, exc_type, exc_value, traceback):
         self.Dispose(False)
         
+    def get_LastError(self):
+        return WIVSM SequenceManager.VIS_VSM_WIVSMSequenceManager_lastError(self._cppObjPtr)
+
+    LastError = property(get_LastError)
+
+    def get_LastErrorVsqParser(self):
+        return WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_lastErrorVsqParser(self._cppObjPtr)
+
+    LastErrorVsqParser = property(get_LastErrorVsqParser)
+
+    def get_LastErrorMessageVsqParser(self):
+        return ctypes.cast(WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_lastErrorMessageVsqParser(self._cppObjPtr),ctypes.c_wchar_p).value
+
+    LastErrorMessageVsqParser = property(get_LastErrorMessageVsqParser)
+
+    def CreateSequence(sequenceData):
+        sequence = WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_createSequence(self._cppObjPtr, ctypes.pointer(sequenceData))
+        if(not (sequence == csharptypes.IntPtr.Zero)):
+            return WIVSMSequence.WIVSMSequence(sequence, True)
+        return None
