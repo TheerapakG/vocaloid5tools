@@ -10,6 +10,15 @@ import WVSMModuleIF
 
 path = "vocaloid editor path: "
 
+def load_path():
+    DatabaseManagerIF.path = path
+    DatabaseManagerIF.load_vdm_path()
+    DSEManagerIF.path = path
+    DSEManagerIF.load_dse_path()
+    DSE_License.load_dse_dll(DSEManagerIF.dse)
+    WVSMModuleIF.path = path
+    WVSMModuleIF.load_vsm_path()
+
 class App:
     
     DatabaseManager = None
@@ -87,11 +96,5 @@ class App:
 
 if __name__ == '__main__':
     path = input(path)
-    DatabaseManagerIF.path = path
-    DatabaseManagerIF.load_vdm_path()
-    DSEManagerIF.path = path
-    DSEManagerIF.load_dse_path()
-    DSE_License.load_dse_dll(DSEManagerIF.dse)
-    WVSMModuleIF.path = path
-    WVSMModuleIF.load_vsm_path()
+    load_path()
     App.InitializeModule()
