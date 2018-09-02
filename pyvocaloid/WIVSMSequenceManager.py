@@ -183,7 +183,7 @@ class WIVSMSequenceManager:
         self.Dispose(False)
         
     def get_LastError(self):
-        return WIVSM SequenceManager.VIS_VSM_WIVSMSequenceManager_lastError(self._cppObjPtr)
+        return WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_lastError(self._cppObjPtr)
 
     LastError = property(get_LastError)
 
