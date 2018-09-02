@@ -1,8 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Yamaha.VOCALOID.VSM.WIVSMSequence
-// Assembly: VOCALOID5, Version=5.0.2.1, Culture=neutral, PublicKeyToken=null
-// MVID: FD8BC746-F3C7-4EB1-8607-01781D952BDD
-// Assembly location: D:\Program Files\VOCALOID5\Editor\VOCALOID5.dll
 
 using System;
 using System.Collections.Generic;
