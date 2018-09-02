@@ -1,5 +1,3 @@
-#WIVSMSequenceManager
-
 import ctypes
 import csharptypes
 
@@ -27,11 +25,13 @@ def load_vsm_path():
     os.chdir(path)
     vsm = ctypes.cdll.LoadLibrary("vsm.dll")
     load_vsm()
+    WIVSMSequenceManager.load_vsm_dll(vsm)
 
 def load_vsm_dll(vsmdll):
     global vsm
     vsm = vsmdll
     load_vsm()
+    WIVSMSequenceManager.load_vsm_dll(vsm)
 
 class WVSMModuleIF:
 

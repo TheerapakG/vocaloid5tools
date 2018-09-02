@@ -6,6 +6,7 @@ import DatabaseManagerIF
 import DSEManagerIF
 import DSE_License
 import LicenseResult
+import WVSMModuleIF
 
 path = "vocaloid editor path: "
 
@@ -13,6 +14,7 @@ class App:
     
     DatabaseManager = None
     DSEManager = None
+    SequenceManager = None
     
     def InitializeModule():
 
@@ -77,6 +79,11 @@ class App:
                 raise Exception("App.ModuleResult.AuthorizationFail")
             
             print("Initializing modules (VSM) ...")
+            App.SequenceManager = WVSMModuleIF.WVSMModuleIF.CreateManager("voc5")
+            if(App.SequenceManager == None):
+                raise Exception("Resources.MsgBox_VSMInitialization_Error")
+            App.SequenceManager.SetDatabaseManager(App.DatabaseManager)
+            App.SequenceManager.SetDSEManager(App.DSEManager)
 
 if __name__ == '__main__':
     path = input(path)
@@ -85,4 +92,6 @@ if __name__ == '__main__':
     DSEManagerIF.path = path
     DSEManagerIF.load_dse_path()
     DSE_License.load_dse_dll(DSEManagerIF.dse)
+    WVSMModuleIF.path = path
+    WVSMModuleIF.load_vsm_path()
     App.InitializeModule()

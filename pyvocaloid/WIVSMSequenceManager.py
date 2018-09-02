@@ -1,5 +1,5 @@
-#VSMSequenceData
-#WIVSMSequence
+#WIVSMSequence.WIVSMSequence
+#WIVSMClipboard.WIVSMClipboard
 
 import ctypes
 import csharptypes
@@ -7,6 +7,8 @@ import os
 
 import WVSMModuleIF
 import VSMResult
+
+import VSMSequenceData
  
 path = "vocaloid editor path: "
  
@@ -21,15 +23,15 @@ def load_vsm():
     VIS_VSM_WIVSMSequenceManager_destroy.restype = ctypes.c_bool
     global VIS_VSM_WIVSMSequenceManager_createSequence
     VIS_VSM_WIVSMSequenceManager_createSequence = vsm[440]
-    VIS_VSM_WIVSMSequenceManager_createSequence.argtypes = [csharptypes.IntPtr, “pointer struct VSMSequenceData”]
+    VIS_VSM_WIVSMSequenceManager_createSequence.argtypes = [csharptypes.IntPtr, ctypes.POINTER(VSMSequenceData.VSMSequenceData)]
     VIS_VSM_WIVSMSequenceManager_createSequence.restype = csharptypes.IntPtr
     global VIS_VSM_WIVSMSequenceManager_openSequence
     VIS_VSM_WIVSMSequenceManager_openSequence = vsm[449]
-    VIS_VSM_WIVSMSequenceManager_openSequence.argtypes = [csharptypes.IntPtr, csharptypes.LPWStr, “pointer struct VSMSequenceData”]
+    VIS_VSM_WIVSMSequenceManager_openSequence.argtypes = [csharptypes.IntPtr, csharptypes.LPWStr, ctypes.POINTER(VSMSequenceData.VSMSequenceData)]
     VIS_VSM_WIVSMSequenceManager_openSequence.restype = csharptypes.IntPtr
     global VIS_VSM_WIVSMSequenceManager_openLegacySequence
     VIS_VSM_WIVSMSequenceManager_openLegacySequence = vsm[448]
-    VIS_VSM_WIVSMSequenceManager_openLegacySequence.argtypes = [csharptypes.IntPtr, csharptypes.LPWStr, “pointer struct VSMSequenceData”, ctypes.c_uint, ctypes.c_bool]
+    VIS_VSM_WIVSMSequenceManager_openLegacySequence.argtypes = [csharptypes.IntPtr, csharptypes.LPWStr, ctypes.POINTER(VSMSequenceData.VSMSequenceData), ctypes.c_uint, ctypes.c_bool]
     VIS_VSM_WIVSMSequenceManager_openLegacySequence.restype = csharptypes.IntPtr
     global VIS_VSM_WIVSMSequenceManager_lastErrorVsqParser
     VIS_VSM_WIVSMSequenceManager_lastErrorVsqParser = vsm[447]
@@ -67,13 +69,11 @@ def load_vsm_path():
     os.chdir(path)
     vsm = ctypes.cdll.LoadLibrary("vsm.dll")
     load_vsm()
-    DatabaseManager.load_vsm_dll(vsm)
  
 def load_vsm_dll(vsmdll):
     global vsm
     vsm = vsmdll
     load_vsm()
-    DatabaseManager.load_vsm_dll(vsm)
  
 class WIVSMSequenceManager:
 
@@ -197,8 +197,46 @@ class WIVSMSequenceManager:
 
     LastErrorMessageVsqParser = property(get_LastErrorMessageVsqParser)
 
-    def CreateSequence(sequenceData):
+    def CreateSequence(self, sequenceData):
         sequence = WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_createSequence(self._cppObjPtr, ctypes.pointer(sequenceData))
         if(not (sequence == csharptypes.IntPtr.Zero)):
             return WIVSMSequence.WIVSMSequence(sequence, True)
         return None
+
+    def OpenSequence(self, filePath, vsqxSchemaDirPath, sequenceData):
+        if (((filepath == None) or (filepath == "")) or ((vsqxSchemaDirPath == None) or (vsqxSchemaDirPath == ""))):
+            return None
+        pSequence = WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_openSequence(self._cppObjPtr, filePath, vsqxSchemaDirPath, ctypes.pointer(sequenceData))
+        if (!(pSequence == csharptypes.IntPtr.Zero)):
+            return WIVSMSequence.WIVSMSequence(pSequence, True)
+        return None
+
+    def OpenLegacySequence(self, path, sequenceData, codePage, channelAsTrack):
+        if (((path == None) or (path == ""))):
+            return None
+        pSequence = WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_openLegacySequence(self._cppObjPtr, path, ctypes.pointer(sequenceData), codePage, channelAsTrack)
+        if (!(pSequence == csharptypes.IntPtr.Zero)):
+            return WIVSMSequence.WIVSMSequence(pSequence, True)
+        return None
+
+    def HasSequence(self, pSeq):
+        if (pSeq == IntPtr.Zero):
+            return False
+        return WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_hasSequence(self._cppObjPtr, pSeq)
+
+    def CreateClipboard(self):
+        clipboard = WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_createClipboard(self._cppObjPtr);
+        if (!(clipboard == csharptypes.IntPtr.Zero)):
+            return WIVSMClipboard.WIVSMClipboard(clipboard)
+        return None
+
+    def SetDatabaseManager(self, databaseManager):
+        if (databaseManager == None):
+            return
+        WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_setDatabaseManager(self._cppObjPtr, databaseManager.IntPtr())
+
+    def SetDSEManager(self, dseManager):
+        if (dseManager == None):
+            return
+        WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_setDSEManager(self._cppObjPtr, dseManager.IntPtr())
+        
