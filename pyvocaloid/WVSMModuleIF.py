@@ -1,7 +1,6 @@
 import ctypes
 import csharptypes
 
-import VSMError
 import WIVSMSequenceManager
 
 path = "vocaloid editor path: "
