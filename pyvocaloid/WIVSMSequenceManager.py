@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+__metaclass__ = type
+
 #WIVSMSequence.WIVSMSequence
 #WIVSMClipboard.WIVSMClipboard
 
@@ -78,7 +82,7 @@ def load_vsm_dll(vsmdll):
 class WIVSMSequenceManager:
 
     VSQ_ERROR_BASE = 2198274048
-    VSQ_ERROR_LASTERRORVSQPARSER = WIVSMSequenceManager.VSQ_ERROR_BASE
+    VSQ_ERROR_LASTERRORVSQPARSER = 2198274048
 
     _cppObjPtr = csharptypes.IntPtr.Zero
  
@@ -207,7 +211,7 @@ class WIVSMSequenceManager:
         if (((filepath == None) or (filepath == "")) or ((vsqxSchemaDirPath == None) or (vsqxSchemaDirPath == ""))):
             return None
         pSequence = WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_openSequence(self._cppObjPtr, filePath, vsqxSchemaDirPath, ctypes.pointer(sequenceData))
-        if (!(pSequence == csharptypes.IntPtr.Zero)):
+        if (not(pSequence == csharptypes.IntPtr.Zero)):
             return WIVSMSequence.WIVSMSequence(pSequence, True)
         return None
 
@@ -215,7 +219,7 @@ class WIVSMSequenceManager:
         if (((path == None) or (path == ""))):
             return None
         pSequence = WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_openLegacySequence(self._cppObjPtr, path, ctypes.pointer(sequenceData), codePage, channelAsTrack)
-        if (!(pSequence == csharptypes.IntPtr.Zero)):
+        if (not(pSequence == csharptypes.IntPtr.Zero)):
             return WIVSMSequence.WIVSMSequence(pSequence, True)
         return None
 
@@ -226,7 +230,7 @@ class WIVSMSequenceManager:
 
     def CreateClipboard(self):
         clipboard = WIVSMSequenceManager.VIS_VSM_WIVSMSequenceManager_createClipboard(self._cppObjPtr);
-        if (!(clipboard == csharptypes.IntPtr.Zero)):
+        if (not(clipboard == csharptypes.IntPtr.Zero)):
             return WIVSMClipboard.WIVSMClipboard(clipboard)
         return None
 
