@@ -20,4 +20,6 @@ this script is written in python 3.6.4, I absolutely sure that it won't work wit
 # pyvocaloid
 pyvocaloid folder contains scripts that wrap around dynamic link library used by Vocaloid5, you need to authorize the Vocaloid program to use these scripts. Currently you need to run the App.py and interact via interactive shell after the script complete.
 
+pyvocaloid is compatible with python 2 with installation of enum34
+
 There is a plan to make interaction more convenient after some module can be interact with
