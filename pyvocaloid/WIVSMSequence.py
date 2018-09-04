@@ -2,25 +2,14 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 __metaclass__ = type
 
+import ctypes
+import csharptypes
+import os
 
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+path = "vocaloid editor path: "
 
-namespace Yamaha.VOCALOID.VSM
-{
-  public class WIVSMSequence
-  {
-    protected IntPtr _cppObjPtr = IntPtr.Zero;
-    protected GlobalTempo _globalTempo;
-    private bool _isCreateUnmanagedObj;
-    private const double _defaultHeightTempoTrack = 20.0;
-    private const double _defaultHeightMasterVolumeTrack = 20.0;
-    private const double _minHeightTempoTrack = 20.0;
-    private const double _minHeightMasterVolumeTrack = 20.0;
-    private const double _autoNormalizeMsec = 30.0;
-    private const int _minLoopRange = 480;
-
+def load_vsm():
+    """
     [DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
     private static extern VSMResult VIS_VSM_WIVSMSequence_lastError(IntPtr cppobjptr);
 
@@ -346,6 +335,34 @@ namespace Yamaha.VOCALOID.VSM
 
     [DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
     private static extern void VIS_VSM_WIVSMSequence_removeUpdateObserver(IntPtr cppobjptr, IntPtr pIVSMUpdateObserver);
+    """
+    pass
+    
+def load_vsm_path():
+    global vsm
+    os.chdir(path)
+    vsm = ctypes.cdll.LoadLibrary("vsm.dll")
+    load_vsm()
+    GlobalTempo.load_vsm_dll(vsm)
+ 
+def load_vsm_dll(vsmdll):
+    global vsm
+    vsm = vsmdll
+    load_vsm()
+    GlobalTempo.load_vsm_dll(vsm)
+    
+class WIVSMSequence:
+    
+    _cppObjPtr = csharptypes.IntPtr.Zero
+    _globalTempo = None
+    _isCreateUnmanagedObj = None
+    """
+    private const double _defaultHeightTempoTrack = 20.0;
+    private const double _defaultHeightMasterVolumeTrack = 20.0;
+    private const double _minHeightTempoTrack = 20.0;
+    private const double _minHeightMasterVolumeTrack = 20.0;
+    private const double _autoNormalizeMsec = 30.0;
+    private const int _minLoopRange = 480;
 
     public static explicit operator IntPtr(WIVSMSequence obj)
     {
@@ -366,16 +383,22 @@ namespace Yamaha.VOCALOID.VSM
     {
       return (int) this._cppObjPtr.ToInt64();
     }
+    """
 
-    internal WIVSMSequence(IntPtr pSequence, bool isCreateUnmanagedObj = false)
-    {
-      if (pSequence == IntPtr.Zero)
-        throw new ArgumentException("アンマネージオブジェクトではない");
-      this._globalTempo = new GlobalTempo(pSequence);
-      this._isCreateUnmanagedObj = isCreateUnmanagedObj;
-      this._cppObjPtr = pSequence;
-    }
+    def __init__(self, pSequence, isCreateUnmanagedObj = False):
+        if (pSequence == csharptypes.IntPtr.Zero):
+            raise csharptypes.ArgumentException("アンマネージオブジェクトではない")
+        self._globalTempo = GlobalTempo.GlobalTempo(pSequence)
+        self._isCreateUnmanagedObj = isCreateUnmanagedObj
+        self._cppObjPtr = pSequence
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if (self._isCreateUnmanagedObj && self._cppObjPtr != csharptypes.IntPtr.Zero):
+            raise csharptypes.ApplicationException("アンマネージオブジェクトが破棄されていない")
+    """
     ~WIVSMSequence()
     {
       if (this._isCreateUnmanagedObj && this._cppObjPtr != IntPtr.Zero)
@@ -1681,5 +1704,4 @@ namespace Yamaha.VOCALOID.VSM
         num2 = 0;
       return num1 >= num2 ? new VSMLoopRange(num2, num1) : new VSMLoopRange(num1, num2);
     }
-  }
-}
+    """

@@ -2,17 +2,14 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 __metaclass__ = type
 
+import ctypes
+import csharptypes
+import os
 
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+path = "vocaloid editor path: "
 
-namespace Yamaha.VOCALOID.VSM
-{
-  public class WIVSMClipboard
-  {
-    protected IntPtr _cppObjPtr = IntPtr.Zero;
-
+def load_vsm():
+    """
     [DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
     [return: MarshalAs(UnmanagedType.U1)]
     private static extern bool VIS_VSM_WIVSMClipboard_destroy(IntPtr cppobjptr);
@@ -151,7 +148,24 @@ namespace Yamaha.VOCALOID.VSM
 
     [DllImport("vsm", CallingConvention = CallingConvention.Cdecl)]
     private static extern void VIS_VSM_WIVSMClipboard_clearVibratoEvent(IntPtr cppobjptr, VSMVibratoEventType type);
+    """
+    pass
 
+def load_vsm_path():
+    global vsm
+    os.chdir(path)
+    vsm = ctypes.cdll.LoadLibrary("vsm.dll")
+    load_vsm()
+ 
+def load_vsm_dll(vsmdll):
+    global vsm
+    vsm = vsmdll
+    load_vsm()
+    
+class WIVSMClipboard:
+    _cppObjPtr = csharptypes.IntPtr.Zero
+
+    """
     public override bool Equals(object obj)
     {
       if (obj == null)
@@ -166,14 +180,20 @@ namespace Yamaha.VOCALOID.VSM
     {
       return (int) this._cppObjPtr.ToInt64();
     }
+    """
+    
+    def __init__(self, pClipboard)
+        if (pClipboard == csharptypes.IntPtr.Zero)
+            raise csharptypes.ArgumentException("アンマネージオブジェクトではない")
+        self._cppObjPtr = pClipboard
+        
+    def __enter__(self):
+        return self
 
-    internal WIVSMClipboard(IntPtr pClipboard)
-    {
-      if (pClipboard == IntPtr.Zero)
-        throw new ArgumentException("アンマネージオブジェクトではない");
-      this._cppObjPtr = pClipboard;
-    }
-
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
+    
+    """
     public VSMResult LastError
     {
       get
@@ -759,5 +779,4 @@ namespace Yamaha.VOCALOID.VSM
       }
       return wivsmTrack != null;
     }
-  }
-}
+    """

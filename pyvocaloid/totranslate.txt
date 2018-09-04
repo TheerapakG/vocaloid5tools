@@ -1,2 +1,0 @@
-WIVSMSequence.WIVSMSequence > WIVSMSequenceManager
-WIVSMClipboard.WIVSMClipboard > WIVSMSequenceManager

@@ -2,9 +2,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 __metaclass__ = type
 
-#WIVSMSequence.WIVSMSequence
-#WIVSMClipboard.WIVSMClipboard
-
 import ctypes
 import csharptypes
 import os
@@ -13,6 +10,8 @@ import WVSMModuleIF
 import VSMResult
 
 import VSMSequenceData
+import WIVSMSequence
+import WIVSMClipboard
  
 path = "vocaloid editor path: "
  
@@ -73,11 +72,15 @@ def load_vsm_path():
     os.chdir(path)
     vsm = ctypes.cdll.LoadLibrary("vsm.dll")
     load_vsm()
+    WIVSMSequence.load_vsm_dll(vsm)
+    WIVSMClipboard.load_vsm_dll(vsm)
  
 def load_vsm_dll(vsmdll):
     global vsm
     vsm = vsmdll
     load_vsm()
+    WIVSMSequence.load_vsm_dll(vsm)
+    WIVSMClipboard.load_vsm_dll(vsm)
  
 class WIVSMSequenceManager:
 
