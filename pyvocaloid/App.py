@@ -2,6 +2,18 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 __metaclass__ = type
 
+#FolderLocation.FolderLocation
+#VSStyleError.VSStyleError
+#StyleManagerIF.StyleManagerIF.CreateStyleManager
+#VMMError.VMMError
+#MediaManagerIF.MediaManagerIF.CreateMediaManager
+#App.InitializeLuaController > InitializeModule
+#LuaManager.LuaManager.__init__
+#LuaManager.LuaManager.HasDefaultSingingSkillFiles
+#LuaManager.LuaManager.HasRobotVoiceLuaFiles
+#App.LoadStyle > InitializeModule
+#App.LoadMedia > InitializeModule
+
 import ctypes
 import csharptypes
 
@@ -28,14 +40,16 @@ class App:
     DatabaseManager = None
     DSEManager = None
     SequenceManager = None
+    StyleManager = None
+    MediaManager = None
     
-    def InitializeModule():
+    def InitializeModule(self):
 
         print("NOT Checking for software update ...")
         
         print("Initializing modules (VDM) ...")
         result1 = VDMError.VDMError.NotAny
-        result1_p = ctypes.pointer(ctypes.c_int(VDMError.VDMError.NotAny))
+        result1_p = ctypes.pointer(ctypes.c_int(result1))
         App.DatabaseManager = DatabaseManagerIF.DatabaseManagerIF.CreateDatabaseManager("voc5", result1_p)
         if(App.DatabaseManager == None or result1 != VDMError.VDMError.NotAny):
             if (result1 == VDMError.VDMError.VoiceBankNotFound):
@@ -75,7 +89,7 @@ class App:
             print("VOCALOID5 Editor not authorized. Please enter a valid VOCALOID5 serial number into the VOCALOID Authorizer.")
             print("there's suppose to be a yes/no dialog box here to launch authorizer")
             raise Exception("App.ModuleResult.AuthorizationFail")
-        if(licenseResult == LicenseResult.LicenseResult.ValidExpiryKey or licenseResult == LicenseResult.LicenseResult.NoError):
+        elif(licenseResult == LicenseResult.LicenseResult.ValidExpiryKey or licenseResult == LicenseResult.LicenseResult.NoError):
             if(not flag2):
                 print("Resources.VerifyLicense_NoVoice")
                 raise Exception("App.ModuleResult.AuthorizationFail")
@@ -97,6 +111,48 @@ class App:
                 raise Exception("Resources.MsgBox_VSMInitialization_Error")
             App.SequenceManager.SetDatabaseManager(App.DatabaseManager)
             App.SequenceManager.SetDSEManager(App.DSEManager)
+
+            print("Initializing modules (VSStyle) ...")
+            if (not Directory.Exists(FolderLocation.FolderLocation.PathUserStylePreset)):
+                Directory.CreateDirectory(FolderLocation.FolderLocation.PathUserStylePreset)
+            result2 = VSStyleError.VSStyleError.NotAny
+            result2_p = ctypes.pointer(ctypes.c_int(result2))
+            App.StyleManager = StyleManagerIF.StyleManagerIF.CreateStyleManager("voc5", FolderLocation.FolderLocation.PathSystemStylePreset, FolderLocation.FolderLocation.PathUserStylePreset, result2_p)
+            if (App.StyleManager == None || result2 != VSStyleError.VSStyleError.NotAny):
+                raise Exception("Resources.MsgBox_StyleManagerInitialization_Error")
+
+            print("Initializing modules (VMM) ...")
+            if (not Directory.Exists(FolderLocation.PathUserMedia)):
+                Directory.CreateDirectory(FolderLocation.PathUserMedia)
+            result3 = VMMError.VMMError.NotAny
+            result3_p = ctypes.pointer(ctypes.c_int(result3))
+            App.MediaManager = MediaManagerIF.MediaManagerIF.CreateMediaManager("voc5", FolderLocation.FolderLocation.PathSystemMedia, FolderLocation.FolderLocation.PathUserMedia, result3_p)
+            if (App.MediaManager == None || result3 != VMMError.VMMError.NotAny):
+                raise Exception("Resources.MsgBox_MediaManagerInitialization_Error")
+            if (not self.InitializeLuaController()):
+                raise Exception("Resources.MsgBox_LuaControllerInitialization_Error")
+            try:
+                App.LuaManager = LuaManager.LuaManager()
+            except (csharptypes.ApplicationException) as ex:
+                print(str(ex), "c:\\JenkinsSlaveJNLP\\workspace\\V5\\refs\\heads\\release\\5.0.2\\vocaloid5win\\VOCALOIDEditor\\App.cs", 64, str(InitializeModule))
+                raise Exception("Resources.MsgBox_LuaManagerInitialization_Error")
+            if (App.LuaManager == None):
+                raise Exception("Resources.MsgBox_LuaManagerInitialization_Error")
+            if (not App.LuaManager.HasDefaultSingingSkillFiles()):
+                raise Exception("Resources.MsgBox_SingingSkill_DefaultSingingSkillNull")
+            if (not App.LuaManager.HasRobotVoiceLuaFiles()):
+                raise Exception("Resources.MsgBox_RobotVoice_RobotVoicesNull")
+
+            print("Loading style files ...")
+            self.LoadStyle()
+            
+            print("Loading phrase files ...")
+            self.LoadMedia()
+
+        else:
+            print("Resources.VerifyLicense_EditorNotAuthorized")
+            print("there's suppose to be a yes/no dialog box here to launch authorizer")
+            raise Exception("App.ModuleResult.AuthorizationFail")
 
 if __name__ == '__main__':
     path = input(path)
