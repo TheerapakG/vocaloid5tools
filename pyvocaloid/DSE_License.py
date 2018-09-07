@@ -70,7 +70,11 @@ class License:
 
     def VIS_DSE_GetCompVersionFromLicense(dseManager, major_p, minor_p, revision_p):
         global VIS_DSE_GetCompVersionFromLicense
-        return VIS_DSE_GetCompVersionFromLicense(dseManager, major_p, minor_p, revision_p)
+        major_p = ctypes.cast(result_p, ctypes.c_void_p)
+        minor_p = ctypes.cast(minor_p, ctypes.c_void_p)
+        revision_p = ctypes.cast(revision_p, ctypes.c_void_p)
+        temp = VIS_DSE_GetCompVersionFromLicense(dseManager, major_p, minor_p, revision_p)
+        return temp
 
     def VIS_DSE_GetCompTypeFromLicense(dseLicense):
         global VIS_DSE_GetCompTypeFromLicense
@@ -110,7 +114,7 @@ class License:
 
     def get_CompVersion(self):
         version = License.Version(-1, -1, -1)
-        License.VIS_DSE_GetCompVersionFromLicense(self._dseLicense, ctypes.cast(version.Major, ctypes.c_void_p), ctypes.cast(version.Minor, ctypes.c_void_p), ctypes.cast(version.Revision, ctypes.c_void_p))
+        License.VIS_DSE_GetCompVersionFromLicense(self._dseLicense, pointer(version.Major), pointer(version.Minor), pointer(version.Revision))
         return version
 
     CompVersion = property(get_CompVersion)
