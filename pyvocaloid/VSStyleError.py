@@ -5,7 +5,7 @@ __metaclass__ = type
 import enum
 
 class VSStyleError(enum.IntEnum):
-    None = 0
+    NotAny = 0
     InvalidArguments = 1
     InvalidHandle = 2
     OutOfMemory = 3
