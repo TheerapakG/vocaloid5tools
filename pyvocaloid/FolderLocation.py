@@ -1,5 +1,8 @@
+
+import os
+
 class FolderLocation:
-    private static readonly string PathSystemData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles), "VOCALOID5")
+    PathSystemData = os.environ[“CommonProgramFiles”] + "VOCALOID5"
     public static readonly string PathSystemStylePreset = Path.Combine(FolderLocation.PathSystemData, "StylePreset")
     public static readonly string PathSystemMedia = Path.Combine(FolderLocation.PathSystemData, "Media")
     public static readonly string PathSystemMESingingSkill = Path.Combine(FolderLocation.PathSystemData, "MIDIEffect", "SingingSkill")
