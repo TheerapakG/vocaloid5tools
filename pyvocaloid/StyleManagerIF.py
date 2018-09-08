@@ -2,12 +2,11 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 __metaclass__ = type
 
-#StyleManager.StyleManager
-
 import ctypes
 import csharptypes
 
 import VSStyleError
+import StyleManager
 
 path = "vocaloid editor path: "
 
@@ -25,20 +24,22 @@ def load_vsstyle():
 def load_vsstyle_path():
     global vsstyle
     os.chdir(path)
-    vsm = ctypes.cdll.LoadLibrary("vsstyle.dll")
+    vsstyle = ctypes.cdll.LoadLibrary("vsstyle.dll")
     load_vsstyle()
+    StyleManager.load_vsm_dll(vsstyle)
 
 def load_vsm_dll(vsstyledll):
     global vsstyle
     vsstyle = vsstyledll
     load_vsstyle()
+    StyleManager.load_vsm_dll(vsstyle)
     
 class StyleManagerIF:
     
-    def VIS_VSM_WVSMModuleIF_createManager(appId, systemStyleDirPath, userStyleDirPath, result_p):
-        global VIS_VSM_WVSMModuleIF_createManager
+    def Module_createStyleManager(appId, systemStyleDirPath, userStyleDirPath, result_p):
+        global Module_createStyleManager
         result_p = ctypes.cast(result_p, ctypes.c_void_p)
-        temp = VIS_VSM_WVSMModuleIF_createManager(appId, systemStyleDirPath, userStyleDirPath, result_p)
+        temp = Module_createStyleManager(appId, systemStyleDirPath, userStyleDirPath, result_p)
         return temp
     
     def CreateStyleManager(appID, systemStyleDirPath, userStyleDirPath, result_p)

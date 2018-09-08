@@ -20,3 +20,6 @@ class ArgumentNullException(ValueError):
 
 class ApplicationException(BaseException):
     pass
+
+class MultiTypeException(BaseException):
+    pass
