@@ -26,13 +26,13 @@ def load_vsstyle_path():
     os.chdir(path)
     vsstyle = ctypes.cdll.LoadLibrary("vsstyle.dll")
     load_vsstyle()
-    StyleManager.load_vsm_dll(vsstyle)
+    StyleManager.load_vsstyle_dll(vsstyle)
 
-def load_vsm_dll(vsstyledll):
+def load_vsstyle_dll(vsstyledll):
     global vsstyle
     vsstyle = vsstyledll
     load_vsstyle()
-    StyleManager.load_vsm_dll(vsstyle)
+    StyleManager.load_vsstyle_dll(vsstyle)
     
 class StyleManagerIF:
     

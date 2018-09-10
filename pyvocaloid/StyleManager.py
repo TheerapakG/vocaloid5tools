@@ -9,6 +9,10 @@ import os
 path = "vocaloid editor path: "
 
 def load_vsstyle():
+    global StyleManager_destroy
+    StyleManager_destroy = vsstyle[71]
+    StyleManager_destroy.argtypes = [cshrptypes.IntPtr]
+    StyleManager_destroy.restype = ctypes.c_bool
     """
     [DllImport("vsstyle", CallingConvention = CallingConvention.Cdecl)]
     [return: MarshalAs(UnmanagedType.U1)]
@@ -84,6 +88,10 @@ def load_vsstyle_dll(vsstyledll):
 class StyleManager:
     
     _cppObjPtr = csharptypes.IntPtr.Zero
+
+    def StyleManager_destroy(styleManagerHandle):
+        global StyleManager_destroy
+        return StyleManager_destroy(styleManagerHandle)
 
     def IntPtr(obj):
         return obj._cppObjPtr
@@ -170,12 +178,12 @@ class StyleManager:
         return (ulong) num.ToUInt32();
       }
     }
+    """
+    
+    def Destroy(self):
+        return StyleManager.StyleManager_destroy(self._cppObjPtr)
 
-    public bool Destroy()
-    {
-      return StyleManager.StyleManager_destroy(this._cppObjPtr);
-    }
-
+    """
     public StyleCreationResult SystemStyleCreationResult(ulong index)
     {
       return new StyleCreationResult(StyleManager.StyleManager_systemStyleCreationResult(this._cppObjPtr, (UIntPtr) index));

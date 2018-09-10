@@ -42,6 +42,8 @@ class App:
     SequenceManager = None
     StyleManager = None
     MediaManager = None
+    LuaControllerIF = None
+    LuaController = None
     
     def InitializeModule(self):
 
@@ -153,6 +155,23 @@ class App:
             print("Resources.VerifyLicense_EditorNotAuthorized")
             print("there's suppose to be a yes/no dialog box here to launch authorizer")
             raise Exception("App.ModuleResult.AuthorizationFail")
+
+    def InitializeLuaController():
+        App.LuaControllerIF = LuaControllerIF.LuaControllerIF()
+        if (App.LuaControllerIF == None)
+            print("LuaControllerIF の生成に失敗した", "c:\\JenkinsSlaveJNLP\\workspace\\V5\\refs\\heads\\release\\5.0.2\\vocaloid5win\\VOCALOIDEditor\\App.cs", 940, "nameof (InitializeLuaController)")
+            return False
+        try:
+            if (not App.LuaControllerIF.Open(path + "vlc.dll")))
+                raise csharptypes.ApplicationException()
+        except:
+            print("Luaコントローラーのオープンに失敗した", "c:\\JenkinsSlaveJNLP\\workspace\\V5\\refs\\heads\\release\\5.0.2\\vocaloid5win\\VOCALOIDEditor\\App.cs", 952, "nameof (InitializeLuaController)")
+            return False
+        App.LuaController = App.LuaControllerIF.CreateController("voc5")
+        if (App.LuaController != None)
+            return True
+        print("Luaコントローラーの生成に失敗した", "c:\\JenkinsSlaveJNLP\\workspace\\V5\\refs\\heads\\release\\5.0.2\\vocaloid5win\\VOCALOIDEditor\\App.cs", 959, "nameof (InitializeLuaController)")
+        return False
 
 if __name__ == '__main__':
     path = input(path)
