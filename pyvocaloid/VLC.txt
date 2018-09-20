@@ -1,0 +1,50 @@
+Microsoft (R) COFF/PE Dumper Version 14.15.26729.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file vlc.dll
+
+File Type: DLL
+
+  Section contains the following exports for vlc.dll
+
+    00000000 characteristics
+    5B57D4AC time date stamp Wed Jul 25 08:38:52 2018
+        0.00 version
+           1 ordinal base
+          20 number of functions
+          20 number of names
+
+    ordinal hint RVA      name
+
+          1    0 0000C6A0 VIS_VLC_LuaControllerIF_create
+          2    1 0000C7E0 VIS_VLC_LuaControllerIF_createController
+          3    2 0000C700 VIS_VLC_LuaControllerIF_destroy
+          4    3 0000C850 VIS_VLC_LuaControllerIF_destroyController
+          5    4 0000C8F0 VIS_VLC_LuaControllerIF_lastError
+          6    5 0000C780 VIS_VLC_LuaControllerIF_open
+          7    6 0000C540 VIS_VLC_LuaController_createLuaThread_MidiPart
+          8    7 0000C5C0 VIS_VLC_LuaController_createLuaThread_Note
+          9    8 0000C640 VIS_VLC_LuaController_lastError
+         10    9 0000C9A0 VIS_VLC_LuaThread_cancel
+         11    A 0000CB30 VIS_VLC_LuaThread_destroy
+         12    B 0000CA40 VIS_VLC_LuaThread_isCancelled
+         13    C 0000C9F0 VIS_VLC_LuaThread_isDone
+         14    D 0000CA90 VIS_VLC_LuaThread_join
+         15    E 0000CAE0 VIS_VLC_LuaThread_joinable
+         16    F 0000CB80 VIS_VLC_LuaThread_lastError
+         17   10 0000C950 VIS_VLC_LuaThread_start
+         18   11 0000BA50 VLCCreateController
+         19   12 0000BBA0 VLCDestroyController
+         20   13 0000BC90 VLCLastError
+
+  Summary
+
+        1000 .data
+        1000 .gfids
+        4000 .pdata
+        E000 .rdata
+        1000 .reloc
+        1000 .rsrc
+       3A000 .text
+        1000 .tls
