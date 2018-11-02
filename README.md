@@ -15,7 +15,7 @@ script to add the VOCALOID5 json file readable by the VOCALOID5 program into new
 
 to run, simply install python 3
 
-this script is written in python 3.6.4, I absolutely sure that it won't work with python 2 and it might not work with earlier version of python 3
+this script is written and checked against Python 3.6.4, I absolutely sure that it won't work with python 2 and it might not work with earlier version of Python 3
 
 # pyvocaloid
 pyvocaloid folder contains scripts that wrap around dynamic link library used by Vocaloid5, you need to authorize the Vocaloid program to use these scripts. Currently you need to run the App.py and interact via interactive shell after the script complete.
